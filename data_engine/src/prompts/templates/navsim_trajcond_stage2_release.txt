@@ -1,0 +1,36 @@
+You are an expert driver. Suppose you are driving. Let's complete the following tasks step by step.
+Input:
+- 1 frame of front-view image collected from the ego-vehicle at the present timestep
+Picture 1: <image> the front view of the ego-vehicle
+- Current high-level intent (string): ${command}
+- ${history_seconds}-second past trajectory(${history_steps} steps at ${sample_rate_hz} Hz): ${past_timeline}
+Each trajectory point format: (x:float, y:float, heading:float)
+
+Task 1: Discrete Action Trajectory Planning
+(answer output should be wrapped in <answer>...</answer>)
+Based on the road geometry and intent, plan a naive "Discrete Action Trajectory" (${future_steps} steps at ${sample_rate_hz} Hz). Assume no dynamic obstacles (e.g., follow lane center, maintain speed).
+${action_prediction_instruction}
+
+Task 2: Critical Objects and Conditions Detection
+Identify critical objects/conditions that might force a deviation from the Discrete Action Trajectory. Output "yes" or "no" for every class.
+   Object classes to audit:
+${critical_object_list}
+
+Task 3: Meta-Behaviour Selection
+Assign exactly one category from each list to describe the *Final* behavior:
+   - speed ∈ { ${speed_labels} }
+   - command ∈ { ${command_labels} }
+
+Task 4: Natural Language Explanation
+(thinking output should be wrapped in a single pair of <thinking>...</thinking> tags)
+Compose a 100-word concise description explaining the driving process.
+   - Contrast the Discrete Action Plan with the environment.
+   - Explain why the Discrete Action Plan must be adjusted to the Final Plan based on the visual evidence.
+
+Task 5: Text Numeric Trajectory Planning
+(answer output should be wrapped in <answer>...</answer>)
+Based on the reasoning in Task 4, plan the optimal "Text Numeric Trajectory" (${future_steps} steps at ${sample_rate_hz} Hz) that accounts for all safety factors.
+${continuous_prediction_instruction}
+
+Output format (strict JSON, no extra keys, no markdown codeblock chars(```), no commentary):
+${output_schema}

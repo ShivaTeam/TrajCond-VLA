@@ -1,0 +1,5 @@
+# Compatible with NAVSIM v2's NumPy 1.23.4 pin.
+numpy>=1.23.4
+scipy>=1.10
+scikit-learn>=1.2
+threadpoolctl>=3.1

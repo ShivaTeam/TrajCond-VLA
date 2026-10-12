@@ -1,0 +1,67 @@
+# TrajCond-VLA: configure NAVSIM and CoT paths before running.
+dataset:
+  name: navsim
+  split: train
+path_base: project_root
+render_errors: raise
+num_workers: 1
+paths:
+  cache_dir: data_engine/cache
+cache:
+  enabled: true
+enrichers:
+- name: validate_trajcond_input
+  params:
+    missing_policy: drop
+- name: replace_image_base
+  params:
+    old_base: /path/to/datasets/navsim
+    new_base: navsim
+- name: merge_gt_trajectories
+  params:
+    source_path: codebook/trajectory.pkl
+    key_field: id
+    trajectory_key: gt
+    missing_policy: drop
+- name: merge_pseudo_labels
+  params:
+    source_path: data_engine/annotations/cot.jsonl
+    parser: poutine
+    key_field: id
+    json_repair: true
+    strict_ids: true
+- name: filter_incomplete_pseudo
+  params:
+    require_meta_behaviour: true
+    validate_classes: true
+    require_image: true
+- name: encode_trajcond
+  params:
+    method: brohan
+    codebook_path: codebook/brohan_codebook_1d_size_768.json
+    variances_path: codebook/action_variances.json
+    search:
+      beam_size: 1
+      per_axis_top_k: 4
+      vehicle:
+        width: 2.297
+        front_bumper_to_axle: 4.049
+        rear_bumper_to_axle: -1.127
+- name: filter_action_error
+  params:
+    drop_fraction: 0.01
+- name: normalize_trajectory
+  params:
+    source_field: target_trajectory
+    output_field: normalized_target_trajectory
+    num_timesteps: 8
+    require_existing_stats: false
+prompt:
+  name: trajcond_stage2
+  params:
+    template_path: data_engine/src/prompts/templates/navsim_trajcond_stage2_release.txt
+    format_contract_path: data_engine/src/prompts/templates/navsim_trajcond_format_release.json
+    decimals: 2
+output:
+  format: json
+  path: data_engine/output/QA_navsim_brohan_stage2.json

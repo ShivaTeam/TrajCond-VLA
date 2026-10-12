@@ -1,0 +1,130 @@
+{
+  "profile": "release",
+  "future_steps": 8,
+  "vocabulary_size": 768,
+  "critical_objects": [
+    "nearby_vehicle",
+    "conflicting_pedestrian",
+    "cyclist",
+    "construction",
+    "traffic_element",
+    "weather_condition",
+    "road_hazard",
+    "emergency_vehicle",
+    "animal",
+    "special_vehicle",
+    "conflicting_vehicle",
+    "door_opening_vehicle"
+  ],
+  "speed_labels": {
+    "prompt": [
+      "keep",
+      "accelerate",
+      "decelerate"
+    ],
+    "answer": [
+      "keep",
+      "accelerate",
+      "decelerate",
+      "other"
+    ]
+  },
+  "command_labels": {
+    "prompt": [
+      "straight",
+      "yield",
+      "left_turn",
+      "right_turn",
+      "lane_follow",
+      "lane_change_left",
+      "lane_change_right",
+      "reverse"
+    ],
+    "answer": [
+      "straight",
+      "yield",
+      "left_turn",
+      "right_turn",
+      "lane_follow",
+      "lane_change_left",
+      "lane_change_right",
+      "reverse",
+      "other"
+    ]
+  },
+  "stages": {
+    "1": {
+      "action_prediction_instructions": {
+        "brohan": "Predict 8 groups of three future trajectory action tokens in [AT, ...] format.",
+        "joint": "Predict 8 future trajectory action tokens in [AT, ...] format."
+      },
+      "answer_fields": [
+        "critical_objects",
+        "explanation",
+        "meta_behaviour",
+        "future_trajectory"
+      ],
+      "thinking_depth": 1,
+      "output_schema_text": "{\n  \"critical_objects\": {\n    \"nearby_vehicle\": \"yes | no\",\n    \"conflicting_pedestrian\": \"yes | no\",\n    \"cyclist\": \"yes | no\",\n    \"construction\": \"yes | no\",\n    \"traffic_element\": \"yes | no\",\n    \"weather_condition\": \"yes | no\",\n    \"road_hazard\": \"yes | no\",\n    \"emergency_vehicle\": \"yes | no\",\n    \"animal\": \"yes | no\",\n    \"special_vehicle\": \"yes | no\",\n    \"conflicting_vehicle\": \"yes | no\",\n    \"door_opening_vehicle\": \"yes | no\"\n  },\n  \"explanation\": \"100-word description that references only the classes marked 'yes'\",\n  \"meta_behaviour\": {\n    \"speed\": \"keep | accelerate | decelerate | other\",\n    \"command\": \"straight | yield | left_turn | right_turn | lane_follow | lane_change_left | lane_change_right | reverse | other\"\n  },\n  \"future_trajectory\": \"<answer>[AT, ...]</answer>\"\n}",
+      "schema_is_json": true,
+      "schema_fields": [
+        "critical_objects",
+        "explanation",
+        "meta_behaviour",
+        "future_trajectory"
+      ],
+      "required_placeholders": [
+        "command",
+        "history_seconds",
+        "history_steps",
+        "sample_rate_hz",
+        "past_timeline",
+        "critical_object_list",
+        "future_seconds",
+        "speed_labels",
+        "command_labels",
+        "future_steps",
+        "action_prediction_instruction",
+        "output_schema"
+      ]
+    },
+    "2": {
+      "action_prediction_instructions": {
+        "brohan": "Predict 8 future movement actions in [AT, ...] format.",
+        "joint": "Predict 8 future movement actions in [AT, ...] format."
+      },
+      "continuous_prediction_instruction": "Predict 8 trajectory points in [PT, ...] format.",
+      "answer_fields": [
+        "discrete_action_trajectory",
+        "critical_objects",
+        "meta_behaviour",
+        "explanation",
+        "future_trajectory"
+      ],
+      "thinking_depth": 1,
+      "output_schema_text": "{\n  \"discrete_action_trajectory\": \"<answer>[AT, ...]</answer>\",\n  \"critical_objects\": {\n    \"nearby_vehicle\": \"yes | no\",\n    \"conflicting_pedestrian\": \"yes | no\",\n    \"cyclist\": \"yes | no\",\n    \"construction\": \"yes | no\",\n    \"traffic_element\": \"yes | no\",\n    \"weather_condition\": \"yes | no\",\n    \"road_hazard\": \"yes | no\",\n    \"emergency_vehicle\": \"yes | no\",\n    \"animal\": \"yes | no\",\n    \"special_vehicle\": \"yes | no\",\n    \"conflicting_vehicle\": \"yes | no\",\n    \"door_opening_vehicle\": \"yes | no\"\n  },\n  \"meta_behaviour\": {\n    \"speed\": \"keep | accelerate | decelerate | other\",\n    \"command\": \"straight | yield | left_turn | right_turn | lane_follow | lane_change_left | lane_change_right | reverse | other\"\n  },\n  \"explanation\": \"100-word description of the driving logic\",\n  \"future_trajectory\": \"<answer>[PT, ...]</answer>\"\n}",
+      "schema_is_json": true,
+      "schema_fields": [
+        "discrete_action_trajectory",
+        "critical_objects",
+        "meta_behaviour",
+        "explanation",
+        "future_trajectory"
+      ],
+      "required_placeholders": [
+        "command",
+        "history_seconds",
+        "history_steps",
+        "sample_rate_hz",
+        "past_timeline",
+        "future_steps",
+        "action_prediction_instruction",
+        "critical_object_list",
+        "speed_labels",
+        "command_labels",
+        "continuous_prediction_instruction",
+        "output_schema"
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+You are an expert driver. Suppose you are driving. Let's complete the following tasks step by step.
+Input:
+- 1 frame of front-view image collected from the ego-vehicle at the present timestep
+Picture 1: <image> the front view of the ego-vehicle
+- Current high-level intent (string): ${command}
+- ${history_seconds}-second past trajectory(${history_steps} steps at ${sample_rate_hz} Hz): ${past_timeline}
+Each trajectory point format: (x:float, y:float, heading:float)
+Task 1: Critical Objects and Conditions Detection
+Decide whether at least one critical instance of each class could influence the ego-vehicle's future path (no omissions). A vehicle can be a car, bus, truck, motorcyclist, scooter, etc. traffic_element includes traffic signs and traffic lights. road_hazard may include hazardous road conditions, road debris, obstacles, etc. A conflicting_vehicle is a vehicle that may potentially conflict with the ego's future path. Output "yes" or "no" for every class (no omissions).
+   Object classes to audit:
+${critical_object_list}
+
+Task 2: Natural Language Explanation
+(thinking output should be wrapped in a single pair of <thinking>...</thinking> tags)
+Compose a 100-word concise natural-language description of the optimal future ${future_seconds}-second trajectory for the ego vehicle that the expert driver (you) plans and explain why the expert driver plans to execute this trajectory.
+   - Mention only the classes you marked "yes" in the previous task.
+   - Describe how each of those critical objects or conditions influences the optimal trajectory.
+   - Do not invent objects or conditions not present in the input.
+
+Task 3: Meta-Behaviour Selection
+Assign exactly one category from each list. Choose the label that best summarises the overall behaviour of the optimal future trajectory:
+   - speed ∈ { ${speed_labels} }
+   - command ∈ { ${command_labels} }
+   Choose the label that best summarises the overall behaviour of the optimal future trajectory.
+   - If none fits, use 'other', but do this sparingly.
+
+Task 4: Future Trajectory Prediction
+(answer output should be wrapped in <answer>...</answer>)
+Given the input, critical objects/conditions, natural language explanation, and meta-behaviour, predict the optimal ${future_seconds}-second future trajectory (${future_steps} steps at ${sample_rate_hz} Hz) of the ego vehicle. ${action_prediction_instruction}
+Output format (strict JSON, no extra keys, no markdown codeblock chars(```), no commentary):
+${output_schema}

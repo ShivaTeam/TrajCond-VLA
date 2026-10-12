@@ -1,0 +1,8 @@
+# Compatible with NAVSIM v2's NumPy 1.23.4 pin.
+numpy>=1.23.4
+pyquaternion>=0.9.9
+pydantic>=2,<3
+tqdm>=4.66
+PyYAML>=6
+json-repair>=0.40
+# Install NAVSIM and its dependencies from the upstream v2 release separately.
